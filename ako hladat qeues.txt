@@ -1,0 +1,11 @@
+dis ql
+ak nefunguje
+dis qa
+ako alias
+remotny zasa
+dis qc
+ako klaster
+
+dis chlauth(CLIENT_DWHKURU) where (mcauser ne 'dwhkuru') ... zobraz channel 
+							autorizacie pre CLIENT_DWHKURU channel, 
+							kde mcauser maping je iny ako na dwhkuru usera 

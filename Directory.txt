@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Prompt for directory
+read -p "Type in directory: " dir
+
+# Prompt for order
+read -p "For descending order press \"d\", for ascending press \"a\": " order
+
+# Extract and print the last portion of the directory path
+dir_name=$(basename "$dir")
+echo "$dir_name"
+
+# Organize list of files
+if [ "$order" = "a" ]; then
+    ls -la "$dir" | awk '{print $9}'
+elif [ "$order" = "d" ]; then
+    ls -lar "$dir" | awk '{print $9}'
+else
+    echo "There is no such option"
+fi
