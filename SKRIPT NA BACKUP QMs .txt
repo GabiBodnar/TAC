@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Set the variables
+qm_num=$(wc -l < qm_list.txt)
+NUM=1
+
+# Define the backup function
+backup() {
+    cd "$backup_dir" || exit 1
+    QM=$(sed "${NUM}q;d" /tmp/qm_list.txt)
+    tar -cvf "${QM}_log.tar" "${log_dir}/${QM}"
+    tar -cvf "${QM}_qmgr.tar" "${qmgrs_dir}/${QM}"
+}
+
+# Prompt for the backup directory
+read -rp "Type in the directory for the backup files: " backup_dir
+if [ ! -d "$backup_dir" ]; then
+    echo "Error: This is not a directory."
+    exit 1
+fi
+echo "Backup directory is saved."
+
+# Prompt for the directory of log files
+read -rp "Type in the directory of log files for backup: " log_dir
+if [ ! -d "$log_dir" ]; then
+    echo "Error: This is not a directory."
+    exit 1
+fi
+echo "Log directory is saved."
+
+# Prompt for the directory of QMGRS files
+read -rp "Type in the directory of qmgrs files for backup: " qmgrs_dir
+if [ ! -d "$qmgrs_dir" ]; then
+    echo "Error: This is not a directory."
+    exit 1
+fi
+echo "Qmgrs directory is saved."
+
+# Create QM list
+ls /var/mqm/qmgrs | grep -E '[A-Z]+[0-9]+' > /tmp/qm_list.txt
+
+# Backup loop
+while [[ $NUM -le $qm_num ]]; do
+    backup
+    NUM=$((NUM+1))
+done
+
+# Display results
+echo "Backup of $qm_num Queue Managers performed successfully."
+ls -la "$backup_dir"
+
+# Delete QM list
+rm /tmp/qm_list.txt
